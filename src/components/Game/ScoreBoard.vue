@@ -1,26 +1,25 @@
 <template>
-  <div class="score-board">
-    <div class="content-container">
-      <div class="content-wrapper">
-        <span class="sub-text">Map</span>
-        <br />
-        <span id="selected-map" class="main-text">{{ selectedMap }}</span>
+  <div :class="$style['score-board']">
+    <div :class="$style['score-board__wrapper']">
+      <div :class="$style['score-board__label']">Map</div>
+      <div :class="$style['score-board__text']">
+        {{ selectedMap }}
       </div>
-      <div class="content-wrapper">
-        <span class="sub-text">Round</span>
-        <br />
-        <span id="round" class="main-text">{{ round }} / 5</span>
-      </div>
-      <div class="content-wrapper">
-        <span class="sub-text">Score</span>
-        <br />
-        <span id="score" class="main-text">{{ score }}</span>
-      </div>
-      <div v-if="selectedMode === 'multiplayer'" class="content-wrapper">
-        <span class="sub-text">Time</span>
-        <br />
-        <span id="time" class="main-text">{{ countdown }}</span>
-      </div>
+    </div>
+    <div :class="$style['score-board__wrapper']">
+      <div :class="$style['score-board__label']">Round</div>
+      <div :class="$style['score-board__text']">{{ round }} / 5</div>
+    </div>
+    <div>
+      <div :class="$style['score-board__label']">Score</div>
+      <div :class="$style['score-board__text']">{{ score }}</div>
+    </div>
+    <div
+      v-if="selectedMode === 'multiplayer'"
+      :class="$style['score-board__wrapper']"
+    >
+      <div :class="$style['score-board__label']">Time</div>
+      <div :class="$style['score-board__text']">{{ countdown }}</div>
     </div>
   </div>
 </template>
@@ -53,7 +52,7 @@ export default defineComponent({
 });
 </script>
 
-<style scoped>
+<style module lang="scss">
 .score-board {
   position: absolute;
   top: 12px;
@@ -62,31 +61,25 @@ export default defineComponent({
   height: 64px;
   padding: 0 16px;
   border-radius: 5px;
-  background-color: #0000ae;
+  background-color: $color-brand-primary;
   z-index: 1;
   display: flex;
   align-items: center;
   justify-content: center;
-}
-
-.content-container {
-  display: flex;
   flex-direction: row;
 }
 
-.content-wrapper {
-  margin-right: 16px;
+.score-board__wrapper {
+  margin: 0 16px;
 }
 
-.main-text {
-  color: #ffffff;
-  font-family: "Roboto medium";
+.score-board__text {
+  color: white;
   font-size: 16px;
 }
 
-.sub-text {
-  color: #ffffff;
-  font-family: "Roboto medium";
+.score-board__label {
+  color: white;
   font-size: 12px;
 }
 </style>

@@ -1,9 +1,14 @@
 <template>
-  <div class="room-number-dialog" :class="[isGameReady ? 'moved' : '']">
-    <div class="content-wrapper">
-      <span class="sub-text">Room Number</span>
-      <br />
-      <span id="room-number" class="main-text">{{ roomNumber }}</span>
+  <div
+    :class="[
+      isGameReady
+        ? $style['room-number-dialog--animated']
+        : $style['room-number-dialog'],
+    ]"
+  >
+    <div>
+      <div :class="$style['room-number-dialog__label']">Room Number</div>
+      <div :class="$style['room-number-dialog__text']">{{ roomNumber }}</div>
     </div>
   </div>
 </template>
@@ -25,7 +30,7 @@ export default defineComponent({
 });
 </script>
 
-<style scoped>
+<style module lang="scss">
 .room-number-dialog {
   position: absolute;
   top: 12px;
@@ -34,27 +39,26 @@ export default defineComponent({
   height: 64px;
   padding: 0 16px;
   border-radius: 5px;
-  background-color: #0000ae;
+  background-color: $color-brand-primary;
   z-index: 5;
   display: flex;
   align-items: center;
   justify-content: center;
   transition: transform 1s;
+
+  &--animated {
+    @extend .room-number-dialog;
+    transform: translateY(-200px);
+  }
 }
 
-.moved {
-  transform: translateY(-200px);
-}
-
-.main-text {
-  color: #ffffff;
-  font-family: "Roboto medium";
-  font-size: 16px;
-}
-
-.sub-text {
-  color: #ffffff;
-  font-family: "Roboto medium";
+.room-number-dialog__label {
+  color: white;
   font-size: 12px;
+}
+
+.room-number-dialog__text {
+  color: white;
+  font-size: 16px;
 }
 </style>

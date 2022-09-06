@@ -1,6 +1,6 @@
 <template>
   <div
-    class="select-box-dialog"
+    :class="$style['select-box-dialog']"
     v-if="isShowingDialog"
     :style="{
       height: options.length <= 4 ? options.length * 40 + 'px' : '180px',
@@ -9,12 +9,14 @@
     }"
   >
     <div
-      class="option-wrapper"
+      :class="$style['select-box-dialog__option-wrapper']"
       v-for="option in options"
       :key="option.value"
       @click="onChangeOption(option)"
     >
-      <span class="option-text">{{ option.text }}</span>
+      <span :class="$style['select-box-dialog__option-text']">{{
+        option.text
+      }}</span>
     </div>
   </div>
 </template>
@@ -48,17 +50,17 @@ export default defineComponent({
 });
 </script>
 
-<style scoped>
+<style module lang="scss">
 .select-box-dialog {
   position: absolute;
   left: 0;
   width: 300px;
-  background: #ffffff;
+  background: white;
   border-radius: 20px;
   overflow-y: auto;
 }
 
-.option-wrapper {
+.select-box-dialog__option-wrapper {
   height: 32px;
   padding: 4px 48px;
   display: flex;
@@ -66,9 +68,8 @@ export default defineComponent({
   cursor: pointer;
 }
 
-.option-text {
-  font-family: "Roboto medium";
+.select-box-dialog__option-text {
   font-size: 16px;
-  color: #3c3c3c;
+  color: $color-black-primary;
 }
 </style>

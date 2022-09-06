@@ -1,36 +1,35 @@
 <template>
-  <div class="counter-container">
-    <div style="flex-grow: 1"></div>
+  <div :class="$style['counter']">
     <button
-      class="button"
-      id="decrement-button"
-      :class="[disabledDecrement || disabled ? 'disabled-button' : '']"
+      :class="[
+        disabledDecrement || disabled
+          ? $style['counter__button--disabled']
+          : $style['counter__button'],
+      ]"
       @click="decrement"
       :disabled="disabledDecrement || disabled"
     >
-      <span
-        class="button-text"
-        :class="[disabledDecrement || disabled ? 'disabled-text' : '']"
-        >-</span
-      >
+      -
     </button>
-    <div class="text-wrapper">
-      <span class="text" :class="[disabled ? 'disabled-text' : '']">
+    <div :class="$style['counter__text-wrapper']">
+      <span
+        :class="[
+          disabled ? 'counter__text--disabled' : $style['counter__text'],
+        ]"
+      >
         {{ count }}
       </span>
     </div>
     <button
-      class="button"
-      id="increment-button"
       @click="increment"
-      :class="[disabledIncrement || disabled ? 'disabled-button' : '']"
+      :class="[
+        disabledIncrement || disabled
+          ? $style['counter__button--disabled']
+          : $style['counter__button'],
+      ]"
       :disabled="disabledIncrement || disabled"
     >
-      <span
-        class="button-text"
-        :class="[disabledIncrement || disabled ? 'disabled-text' : '']"
-        >+</span
-      >
+      +
     </button>
   </div>
 </template>
@@ -82,49 +81,48 @@ export default defineComponent({
 });
 </script>
 
-<style scoped>
-.counter-container {
+<style module lang="scss">
+.counter {
   position: absolute;
   right: 24px;
   width: 150px;
   display: flex;
+  justify-content: right;
   flex-direction: row;
 }
 
-.button {
+.counter__button {
   width: 36px;
   height: 36px;
-  border: 1px solid #dcdcdc;
   border-radius: 18px;
-  background-color: #ffffff;
+  background-color: white;
+  font-size: 20px;
+  border: 1px solid $color-white-secondary;
+  color: $color-black-secondary;
   cursor: pointer;
+
+  &--disabled {
+    @extend .counter__button;
+    border-color: $color-white-primary;
+    color: $color-white-secondary;
+    cursor: not-allowed;
+  }
 }
 
-.disabled-button {
-  border: 1px solid #eeeeee;
-  cursor: not-allowed;
-}
-
-.text-wrapper {
+.counter__text-wrapper {
   width: 32px;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-.text {
-  font-family: "Roboto medium";
+.counter__text {
   font-size: 16px;
-  color: #3c3c3c;
-}
+  color: $color-black-primary;
 
-.button-text {
-  color: #5f5f5f;
-  font-family: "Roboto medium";
-  font-size: 20px;
-}
-
-.disabled-text {
-  color: #dcdcdc;
+  &--disabled {
+    @extend .counter__text;
+    color: $color-white-secondary;
+  }
 }
 </style>

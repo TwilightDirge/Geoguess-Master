@@ -17,14 +17,10 @@ describe("Test Switch component", () => {
     wrapper.unmount();
   });
 
-  it("Test onChangeValue event onClick yes button", async () => {
-    await wrapper.find("#option-yes").trigger("click");
-
-    expect(wrapper.emitted().onChangeValue[0]).toEqual([true]);
-  });
-
   it("Test onChangeValue event onClick no button", async () => {
-    await wrapper.find("#option-no").trigger("click");
+    const optionNo = wrapper.findAll(".switch__option--not-selected")[0];
+    expect(optionNo.text()).toBe("NO");
+    await optionNo.trigger("click");
 
     expect(wrapper.emitted().onChangeValue[0]).toEqual([false]);
   });

@@ -1,23 +1,27 @@
 <template>
-  <div class="input-wrapper">
+  <div :class="$style['input']">
     <label
       :for="name"
-      class="input-label"
-      :classs="[disabled ? 'disabled-input-label' : '']"
+      :class="[
+        disabled ? $style['input__label--disabled'] : $style['input__label'],
+      ]"
     >
       {{ label }}
     </label>
     <input
       type="text"
       :name="name"
-      class="text-input"
-      :class="[disabled ? 'disabled-input' : '']"
+      :class="[
+        disabled ? $style['text-input--disabled'] : $style['text-input'],
+      ]"
       :placeholder="placeholder"
       v-model="state.inputValue"
       @input="onChangeValue"
       :disabled="disabled"
     />
-    <span v-if="errorMsg" class="error-text">{{ errorMsg }}</span>
+    <span v-if="errorMsg" :class="$style['input__error-text']">{{
+      errorMsg
+    }}</span>
   </div>
 </template>
 
@@ -73,57 +77,52 @@ export default defineComponent({
 });
 </script>
 
-<style scoped>
-.input-wrapper {
+<style module lang="scss">
+.input {
   display: flex;
   flex-direction: column;
 }
 
-.input-label {
+.input__label {
   margin-bottom: 4px;
-  font-family: "Roboto medium";
   font-size: 10px;
-  color: #5f5f5f;
-}
+  color: $color-black-secondary;
 
-.disabled-input-label {
-  color: #dcdcdc;
+  &--disabled {
+    @extend .input__label;
+    color: $color-white-secondary;
+  }
 }
 
 .text-input {
   border: none;
-  font-family: "Roboto";
   font-size: 16px;
-  border-bottom: 1px solid #dcdcdc;
-  color: #3c3c3c;
+  border-bottom: 1px solid $color-white-secondary;
+  color: $color-black-primary;
+
+  &:focus-visible {
+    box-shadow: none;
+    outline: 0;
+  }
+
+  &::placeholder {
+    color: $color-black-secondary;
+  }
+
+  &--disabled {
+    @extend .text-input;
+    border-bottom-color: $color-white-primary;
+    color: $color-white-secondary;
+
+    &::placeholder {
+      color: $color-white-secondary;
+    }
+  }
 }
 
-.text-input ::placeholder {
-  color: #5f5f5f;
-}
-
-.text-input::placeholder {
-  color: var(--placeholder-color);
-}
-
-.text-input:focus-visible {
-  box-shadow: none;
-  outline: 0;
-}
-
-.disabled-input {
-  border-bottom: 1px solid #eeeeee;
-  color: #dcdcdc;
-}
-
-.disabled-input ::placeholder {
-  color: #dcdcdc;
-}
-
-.error-text {
+.input__error-text {
   margin-top: 2px;
-  font-family: "Roboto";
   font-size: 10px;
-  color: #ff4343;
+  color: $color-red-primary;
 }
 </style>

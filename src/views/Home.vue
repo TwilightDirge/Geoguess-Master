@@ -1,9 +1,13 @@
 <template>
-  <div class="screen">
-    <div class="header">
-      <img src="@/assets/logo.png" class="logo" />
-      <span class="title">Geoguess Master</span>
-      <div class="header-right">
+  <div :class="$style['page']">
+    <header :class="$style['page__header']">
+      <img
+        src="@/assets/images/logo.png"
+        :class="$style['page__logo']"
+        alt="Geoguess Master Logo"
+      />
+      <span :class="$style['page__title']">Geoguess Master</span>
+      <div :class="$style['page__header-container']">
         <a href="https://github.com/spider-hand/Geoguess-Master">
           <GithubIcon
             title="Github repository link here."
@@ -12,10 +16,10 @@
           />
         </a>
       </div>
-    </div>
-    <div class="container">
-      <div class="game-create-box-container">
-        <div class="game-create-box">
+    </header>
+    <div :class="$style['page__container']">
+      <div :class="$style['page__game-create-box-container']">
+        <div :class="$style['page__game-create-box']">
           <SelectBox
             title="Map"
             :selectedOption="
@@ -42,27 +46,27 @@
             :options="MODE_OPTIONS"
             @onChangeOption="onChangeSelectedMode"
           />
-          <div
-            class="start-game-button"
+          <button
+            :class="$style['page__button']"
             v-if="store.state.gameSettings.selectedMode === 'single'"
             @click="startSinglePlayerGame"
           >
-            <span id="travel-explore-icon" class="material-icons"
+            <span :class="$style['page__button-icon']" class="material-icons"
               >travel_explore</span
             >
-            <span class="create-button-text">START</span>
-          </div>
-          <div
-            class="create-room-button"
+            <div :class="$style['page__button-text']">START</div>
+          </button>
+          <button
+            :class="$style['page__button']"
             ref="createRoomButtonRef"
             v-if="store.state.gameSettings.selectedMode === 'multiplayer'"
             @click="openCreateRoomDialog"
           >
-            <span id="travel-explore-icon" class="material-icons"
+            <span :class="$style['page__button-icon']" class="material-icons"
               >travel_explore</span
             >
-            <span class="create-button-text">CREATE ROOM</span>
-          </div>
+            <div :class="$style['page__button-text']">CREATE ROOM</div>
+          </button>
           <CreateRoomDialog
             :isShowingDialog="state.isShowingRoomCreateDialog"
             :isRoomFound="state.isRoomFound"
@@ -81,21 +85,22 @@
           />
         </div>
       </div>
-      <div class="map-image-container">
+      <div :class="$style['page__image-wrapper']">
         <img
-          :src="require(`@/assets/${store.state.gameSettings.selectedMap}.png`)"
-          class="map-image"
+          :src="
+            require(`@/assets/images/${store.state.gameSettings.selectedMap}.png`)
+          "
+          :class="$style['page__image']"
+          alt="Selected Map Image"
         />
       </div>
     </div>
-    <div class="footer">
-      <div class="copyright-container">
-        <span class="copyright-text">
-          All rights reserved. Copyright © {{ new Date().getFullYear() }}
-          <strong>Spider Hand</strong>
-        </span>
-      </div>
-    </div>
+    <footer :class="$style['page__footer']">
+      <span :class="$style['page__copyright']">
+        All rights reserved. Copyright © {{ new Date().getFullYear() }}
+        <strong>Spider Hand</strong>
+      </span>
+    </footer>
   </div>
 </template>
 
@@ -138,7 +143,7 @@ export default defineComponent({
       let isRoomCreateDialogClicked = false;
       const path = event.composedPath();
       path.forEach((el) => {
-        if ((el as Element).className === "create-room-dialog") {
+        if ((el as Element).id === "create-room-dialog") {
           isRoomCreateDialogClicked = true;
           return;
         }
@@ -284,11 +289,11 @@ export default defineComponent({
 });
 </script>
 
-<style scoped>
-.screen {
+<style module lang="scss">
+.page {
   position: absolute;
   width: 100%;
-  height: 100%;
+  height: 100vh;
   top: 0;
   left: 0;
   background: linear-gradient(#0000ae, #000057);
@@ -296,8 +301,8 @@ export default defineComponent({
   overflow-y: auto;
 }
 
-.header {
-  position: absolute;
+.page__header {
+  position: relative;
   width: 100%;
   height: 64px;
   top: 0;
@@ -306,7 +311,7 @@ export default defineComponent({
   align-items: center;
 }
 
-.header-right {
+.page__header-container {
   position: absolute;
   width: 96px;
   height: 100%;
@@ -317,25 +322,24 @@ export default defineComponent({
   align-items: center;
 }
 
-.logo {
+.page__logo {
   height: 48px;
   padding-left: 16px;
 }
 
-.title {
-  color: #ffffff;
-  font-family: "Roboto medium";
+.page__title {
+  color: white;
   font-size: 20px;
 }
 
-.container {
-  position: absolute;
+.page__container {
   width: 100%;
-  top: 64px;
+  height: calc(100% - 64px);
+  top: 0;
   left: 0;
 }
 
-.game-create-box-container {
+.page__game-create-box-container {
   width: 100%;
   padding: 16px 0;
   display: flex;
@@ -343,7 +347,7 @@ export default defineComponent({
   justify-content: center;
 }
 
-.game-create-box {
+.page__game-create-box {
   position: relative;
   width: 640px;
   height: 64px;
@@ -353,29 +357,25 @@ export default defineComponent({
   align-items: center;
 }
 
-.start-game-button,
-.create-room-button {
+.page__button {
   width: 172px;
   height: 48px;
-  background-color: #ff4343;
+  background-color: $color-red-primary;
+  border: none;
   border-radius: 32px;
+  font-size: 16px;
+  color: #ffffff;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
 }
 
-.create-button-text {
-  font-family: "Roboto medium";
-  font-size: 16px;
-  color: #ffffff;
-}
-
-#travel-explore-icon {
+.page__button-icon {
   display: none;
 }
 
-.map-image-container {
+.page__image-wrapper {
   width: 100%;
   padding: 24px 0;
   display: flex;
@@ -383,69 +383,62 @@ export default defineComponent({
   justify-content: center;
 }
 
-.map-image {
+.page__image {
   width: 680px;
   border-radius: 8px;
 }
 
-.footer {
-  position: absolute;
-  bottom: 0;
+.page__footer {
+  top: 0;
   left: 0;
   width: 100%;
-  height: 36px;
+  height: 24px;
+  padding: 0 12px;
   display: flex;
   align-items: center;
 }
-
-.copyright-container {
-  padding: 0 12px;
-}
-
-.copyright-text {
-  font-family: "Roboto medium";
+.page__copyright {
   font-size: 12px;
-  color: #ffffff;
+  color: white;
 }
 
 @media only screen and (max-width: 480px) {
-  .header {
+  .page__header {
     height: 48px;
   }
 
-  .header-right {
+  .page__header-container {
     width: 64px;
   }
 
-  .title {
+  .page__title {
     display: none;
   }
 
-  .start-game-button,
-  .create-room-button {
+  .page__container {
+    height: calc(100% - 72px);
+  }
+
+  .page__button {
     position: absolute;
     right: 4px;
     width: 48px;
     border-radius: 24px;
-    background-color: #ffffff;
+    background-color: white;
   }
 
-  .create-button-text {
+  .page__button-text {
     display: none;
   }
 
-  #travel-explore-icon {
+  .page__button-icon {
     display: block;
-    color: #ff4343;
+    color: $color-red-primary;
   }
 
-  .game-create-box {
+  .page__game-create-box {
     width: 92%;
     height: 48px;
-  }
-
-  .map-image {
-    height: 100%;
   }
 }
 </style>

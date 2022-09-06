@@ -22,18 +22,18 @@ describe("Test Counter component", () => {
     });
 
     it("Test count text", () => {
-      expect(wrapper.find(".text").text()).toBe("3");
+      expect(wrapper.find(".counter__text").text()).toBe("3");
     });
 
     it("Test onChangeValue event onClick increment button", async () => {
-      await wrapper.find("#increment-button").trigger("click");
-  
+      await wrapper.findAll(".counter__button")[1].trigger("click");
+
       expect(wrapper.emitted().onChangeValue[0]).toEqual([4]);
     });
 
     it("Test onChangeValue event onClick decrement button", async () => {
-      await wrapper.find("#decrement-button").trigger("click");
-  
+      await wrapper.findAll(".counter__button")[0].trigger("click");
+
       expect(wrapper.emitted().onChangeValue[0]).toEqual([2]);
     });
   });
@@ -50,23 +50,22 @@ describe("Test Counter component", () => {
       });
     });
 
+    it("Confirm increment button is disabled", () => {
+      const incrementButton = wrapper.findAll(".counter__button--disabled")[0];
+      expect(incrementButton.text()).toBe("+");
+    });
+
     it("increment button is disabled when the count reaches to max", async () => {
-      const incrementButton = wrapper.find("#increment-button");
+      const incrementButton = wrapper.findAll(".counter__button--disabled")[0];
       await incrementButton.trigger("click");
-  
+
       expect(incrementButton.attributes("disabled")).toBeDefined();
     });
 
     it("onChangeValue has not been triggered when the count reaches to max", async () => {
-      await wrapper.find("#increment-button").trigger("click");
-  
-      expect(wrapper.emitted().onChangeValue).toBeUndefined();
-    });
+      await wrapper.findAll(".counter__button--disabled")[0].trigger("click");
 
-    it("Test the style when the increment button is disabled", () => {
-      const incrementButton = wrapper.find("#increment-button");
-      expect(incrementButton.classes()).toContain("disabled-button");
-      expect(incrementButton.find(".button-text").classes()).toContain("disabled-text");
+      expect(wrapper.emitted().onChangeValue).toBeUndefined();
     });
   });
 
@@ -82,24 +81,22 @@ describe("Test Counter component", () => {
       });
     });
 
+    it("Confirm decrement button is disabled", () => {
+      const decrementButton = wrapper.findAll(".counter__button--disabled")[0];
+      expect(decrementButton.text()).toBe("-");
+    });
+
     it("decrement button is disabled when the count reaches to min", async () => {
-      const decrementButton = wrapper.find("#decrement-button");
+      const decrementButton = wrapper.findAll(".counter__button--disabled")[0];
       await decrementButton.trigger("click");
-  
+
       expect(decrementButton.attributes("disabled")).toBeDefined();
     });
 
-
     it("onChangeValue has not been triggered when the count reaches to min", async () => {
-      await wrapper.find("#decrement-button").trigger("click");
-  
-      expect(wrapper.emitted().onChangeValue).toBeUndefined();
-    });
+      await wrapper.findAll(".counter__button--disabled")[0].trigger("click");
 
-    it("Test the style when the decrement button is disabled", () => {
-      const decrementButton = wrapper.find("#decrement-button");
-      expect(decrementButton.classes()).toContain("disabled-button");
-      expect(decrementButton.find(".button-text").classes()).toContain("disabled-text");
+      expect(wrapper.emitted().onChangeValue).toBeUndefined();
     });
   });
 
@@ -116,27 +113,15 @@ describe("Test Counter component", () => {
     });
 
     it("increment button is disabled", () => {
-      const incrementButton = wrapper.find("#increment-button");
+      const incrementButton = wrapper.findAll(".counter__button--disabled")[0];
 
       expect(incrementButton.attributes("disabled")).toBeDefined();
     });
 
-    it("Test the style when the increment button is disabled", () => {
-      const incrementButton = wrapper.find("#increment-button");
-      expect(incrementButton.classes()).toContain("disabled-button");
-      expect(incrementButton.find(".button-text").classes()).toContain("disabled-text");
-    });
-
     it("decrement button is disabled", () => {
-      const decrementButton = wrapper.find("#decrement-button");
+      const decrementButton = wrapper.findAll(".counter__button--disabled")[1];
 
       expect(decrementButton.attributes("disabled")).toBeDefined();
-    });
-
-    it("Test the style when the decrement button is disabled", () => {
-      const decrementButton = wrapper.find("#decrement-button");
-      expect(decrementButton.classes()).toContain("disabled-button");
-      expect(decrementButton.find(".button-text").classes()).toContain("disabled-text");
     });
   });
 });

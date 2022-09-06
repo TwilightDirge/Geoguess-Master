@@ -1,38 +1,33 @@
 <template>
-  <div class="result-modal">
-    <div id="result-map"></div>
-    <div class="modal-footer">
+  <div :class="$style['result-modal']">
+    <div :class="$style['result-modal__map']" ref="resultMapRef"></div>
+    <div :class="$style['result-modal__footer']">
       <div
-        class="result-wrapper"
+        :class="$style['result-modal__wrapper']"
         v-if="!isShowingSummary && selectedMode === 'single'"
       >
-        <span id="distance" class="text" v-if="distance !== null"
+        <span :class="$style['result-modal__text']" v-if="distance !== null"
           >You are {{ distance }}km away.</span
         >
         <button
-          id="next-round-button"
-          class="long-button"
+          :class="$style['result-modal__button--red']"
           v-if="round < 5"
           @click="onClickNextRoundButton"
         >
-          <span class="text">NEXT ROUND</span>
+          NEXT ROUND
         </button>
         <button
-          id="view-summary-button"
-          class="long-button"
+          :class="$style['result-modal__button--red']"
           v-else
           @click="onClickViewSummaryButton"
         >
-          <span class="text">VIEW SUMMARY</span>
+          VIEW SUMMARY
         </button>
       </div>
-      <div
-        class="content-wrapper"
-        v-if="!isShowingSummary && selectedMode === 'multiplayer'"
-      >
-        <div class="result-wrapper">
+      <div v-if="!isShowingSummary && selectedMode === 'multiplayer'">
+        <div :class="$style['result-modal__wrapper']">
           <span
-            class="text"
+            :class="$style['result-modal__text']"
             style="margin: 4px"
             v-for="(item, index) in distanceByPlayerArr"
             :key="index"
@@ -40,71 +35,65 @@
             {{ item.playerName }} is {{ item.distance }}km away!
           </span>
         </div>
-        <div class="button-container-multiplayer-game">
+        <div :class="$style['result-modal__button-wrapper2']">
           <button
-            id="next-round-button"
-            class="long-button"
-            :class="[!isOwner && !isNextRoundReady ? 'disabled-button' : null]"
+            :class="[
+              !isOwner && !isNextRoundReady
+                ? $style['result-modal__button--red--disabled']
+                : $style['result-modal__button--red'],
+            ]"
             v-if="round < 5"
             :disabled="!isOwner && !isNextRoundReady"
             @click="onClickNextRoundButton"
           >
-            <span class="text">NEXT ROUND</span>
+            NEXT ROUND
           </button>
           <button
-            id="view-summary-button"
-            class="long-button"
+            :class="$style['result-modal__button--red']"
             v-else
             @click="onClickViewSummaryButton"
           >
-            <span class="text">VIEW SUMMARY</span>
+            VIEW SUMMARY
           </button>
         </div>
       </div>
       <div
-        class="result-wrapper"
+        :class="$style['result-modal__wrapper']"
         v-if="isShowingSummary && selectedMode === 'single'"
       >
-        <span id="distance" class="text"
+        <span :class="$style['result-modal__text']"
           >You are {{ score }}km away in total.</span
         >
-        <div class="button-container">
+        <div :class="$style['result-modal__button-wrapper']">
           <button
-            id="play-again-button"
-            class="long-button"
+            :class="$style['result-modal__button--red']"
             @click="onClickPlayAgainButton"
           >
-            <span class="text">PLAY AGAIN</span>
+            PLAY AGAIN
           </button>
           <button
-            id="exit-button"
-            class="long-button"
+            :class="$style['result-modal__button--brand']"
             @click="onClickExitButton"
           >
-            <span class="text">EXIT</span>
+            EXIT
           </button>
         </div>
       </div>
-      <div
-        class="content-wrapper"
-        v-if="isShowingSummary && selectedMode === 'multiplayer'"
-      >
-        <div class="result-wrapper">
+      <div v-if="isShowingSummary && selectedMode === 'multiplayer'">
+        <div :class="$style['result-modal__wrapper']">
           <span
-            id="distance"
-            class="text"
+            :class="$style['result-modal__text']"
             v-for="(item, index) in multiplayerGameSummary"
             :key="index"
             >{{ item.playerName }} is {{ item.score }}km away in total.</span
           >
         </div>
-        <div class="button-container-multiplayer-game">
+        <div :class="$style['result-modal__button-wrapper2']">
           <button
-            id="exit-button"
-            class="long-button"
+            :class="$style['result-modal__button--brand']"
             @click="endMultiplayerGame"
           >
-            <span class="text">EXIT</span>
+            EXIT
           </button>
         </div>
       </div>
@@ -115,7 +104,7 @@
 <script lang="ts">
 /*global google*/
 import { GameHistory } from "@/types";
-import { defineComponent, watch, onMounted } from "vue";
+import { defineComponent, watch, onMounted, ref } from "vue";
 
 export default defineComponent({
   props: {
@@ -180,6 +169,7 @@ export default defineComponent({
 
   setup(props, context) {
     let map: google.maps.Map;
+    const resultMapRef = ref<HTMLElement>();
     let markers: google.maps.Marker[] = [];
     let polylines: google.maps.Polyline[] = [];
 
@@ -204,7 +194,7 @@ export default defineComponent({
     ): void => {
       const polyline = new google.maps.Polyline({
         path: [from, to],
-        strokeColor: "#ff4343",
+        strokeColor: "hsl(0, 100%, 63%)",
       });
       polyline.setMap(map);
       polylines.push(polyline);
@@ -277,21 +267,19 @@ export default defineComponent({
     );
 
     onMounted(() => {
-      if (document.getElementById("result-map") !== null) {
-        map = new google.maps.Map(
-          document.getElementById("result-map") as HTMLElement,
-          {
-            center: { lat: 37.86926, lng: -122.254811 },
-            zoom: 2,
-            fullscreenControl: false,
-            mapTypeControl: false,
-            streetViewControl: false,
-          }
-        );
+      if (resultMapRef.value) {
+        map = new google.maps.Map(resultMapRef.value as HTMLElement, {
+          center: { lat: 37.86926, lng: -122.254811 },
+          zoom: 2,
+          fullscreenControl: false,
+          mapTypeControl: false,
+          streetViewControl: false,
+        });
       }
     });
 
     return {
+      resultMapRef,
       onClickNextRoundButton,
       onClickViewSummaryButton,
       onClickPlayAgainButton,
@@ -302,7 +290,7 @@ export default defineComponent({
 });
 </script>
 
-<style scoped>
+<style module lang="scss">
 .result-modal {
   position: absolute;
   width: 100%;
@@ -312,7 +300,7 @@ export default defineComponent({
   z-index: 3;
 }
 
-#result-map {
+.result-modal__map {
   position: absolute;
   width: 100%;
   height: 70%;
@@ -320,64 +308,66 @@ export default defineComponent({
   left: 0;
 }
 
-.modal-footer {
+.result-modal__footer {
   position: absolute;
   width: 100%;
   height: 30%;
   bottom: 0;
   left: 0;
-  background-color: #0000ae;
+  background-color: $color-brand-primary;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-.result-wrapper {
+.result-modal__wrapper {
   width: 360px;
   display: flex;
   align-items: center;
   flex-direction: column;
 }
 
-.button-container {
+.result-modal__button-wrapper {
   display: flex;
   align-items: center;
   flex-direction: row;
 }
 
-.button-container-multiplayer-game {
+.result-modal__button-wrapper2 {
   position: absolute;
   right: 0;
   bottom: 0;
 }
 
-.text {
-  color: #ffffff;
-  font-family: "Roboto medium";
-  font-size: 16px;
-}
-
-.long-button {
+.result-modal__button {
   width: 180px;
   height: 36px;
   margin: 16px;
   border: none;
   border-radius: 5px;
+  color: white;
+  font-size: 16px;
   cursor: pointer;
+
+  &--red {
+    @extend .result-modal__button;
+    background-color: $color-red-primary;
+
+    &--disabled {
+      @extend .result-modal__button--red;
+      cursor: not-allowed;
+    }
+  }
+
+  &--brand {
+    @extend .result-modal__button;
+    background-color: $color-brand-primary;
+    border: 1.5px solid white;
+  }
 }
 
-.disabled-button {
-  cursor: not-allowed;
-}
-
-#next-round-button,
-#view-summary-button,
-#play-again-button {
-  background-color: #ff4343;
-}
-
-#exit-button {
-  background-color: #0000ae;
-  border: 1.5px solid #ffffff;
+.result-modal__text {
+  font-size: 16px;
+  color: white;
 }
 </style>

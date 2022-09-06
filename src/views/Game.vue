@@ -1,5 +1,5 @@
 <template>
-  <div class="screen">
+  <div :class="$style['page']">
     <Overlay
       v-show="
         store.state.gameSettings.selectedMode === 'multiplayer' &&
@@ -68,38 +68,37 @@
       @onClickHideMapButton="onClickHideMapButton"
     />
     <button
-      id="guess-button"
-      :class="['long-button', isGuessButtonDisabled ? 'disabled-button' : null]"
+      :class="[
+        isGuessButtonDisabled
+          ? $style['page__long-button--disabed']
+          : $style['page__long-button'],
+      ]"
       :disabled="isGuessButtonDisabled"
       @click="onClickGuessButton"
     >
-      <span class="button-text">GUESS</span>
+      GUESS
     </button>
     <button
-      id="make-guess-button"
-      class="long-button"
+      :class="$style['page__long-button2']"
       v-show="!store.state.inGame.isMakeGuessButtonClicked"
       @click="onClickMakeGuessButton"
     >
-      <span class="button-text">MAKE GUESS</span>
+      MAKE GUESS
     </button>
     <button
-      id="reset-location-button"
-      class="round-button"
+      :class="$style['page__round-button--black']"
       @click="onClickResetLocationButton"
     >
       <span class="material-icons">my_location</span>
     </button>
     <button
-      id="zoom-in-button"
-      class="round-button"
+      :class="$style['page__round-button--red']"
       @click="onClickZoomInButton"
     >
       <span class="material-icons">zoom_in</span>
     </button>
     <button
-      id="zoom-out-button"
-      class="round-button"
+      :class="$style['page__round-button--brand']"
       @click="onClickZoomOutButton"
     >
       <span class="material-icons">zoom_out</span>
@@ -249,16 +248,12 @@ export default defineComponent({
       store.dispatch("saveIsMakeGuessButtonClickedAction", {
         isMakeGuessButtonClicked: true,
       });
-      document.getElementById("map-container")!.style.transform =
-        "translateY(-340px)";
     };
 
     const onClickHideMapButton = (): void => {
       store.dispatch("saveIsMakeGuessButtonClickedAction", {
         isMakeGuessButtonClicked: false,
       });
-      document.getElementById("map-container")!.style.transform =
-        "translateY(300px)";
     };
 
     const onClickGuessButton = async (): Promise<void> => {
@@ -407,11 +402,14 @@ export default defineComponent({
       state.overlayMsg = "Disconnecting from this game..";
       state.isEndingMultiplayerGame = true;
       off(dbRef(database, `/${store.state.gameSettings.roomNumber}`));
-      remove(dbRef(database, `/${store.state.gameSettings.roomNumber}`));
 
-      setTimeout(() => {
-        router.back();
-      }, 3000);
+      if (store.state.gameSettings.roomNumber !== "") {
+        remove(dbRef(database, `/${store.state.gameSettings.roomNumber}`));
+
+        setTimeout(() => {
+          router.back();
+        }, 3000);
+      }
     };
 
     onMounted(() => {
@@ -593,8 +591,8 @@ export default defineComponent({
 });
 </script>
 
-<style scoped>
-.screen {
+<style module lang="scss">
+.page {
   position: absolute;
   width: 100%;
   height: 100%;
@@ -603,7 +601,7 @@ export default defineComponent({
   overflow: hidden;
 }
 
-.long-button {
+.page__long-button {
   position: absolute;
   bottom: 10px;
   left: 12px;
@@ -611,11 +609,25 @@ export default defineComponent({
   height: 36px;
   border: none;
   border-radius: 5px;
-  cursor: pointer;
+  background-color: $color-red-primary;
+  font-size: 16px;
+  color: white;
   z-index: 1;
+  cursor: pointer;
+
+  &--disabled {
+    @extend .page__long-button;
+    opacity: 0.7;
+    cursor: not-allowed;
+  }
 }
 
-.round-button {
+.page__long-button2 {
+  @extend .page__long-button;
+  visibility: hidden;
+}
+
+.page__round-button {
   position: absolute;
   right: 12px;
   width: 48px;
@@ -627,46 +639,30 @@ export default defineComponent({
   display: flex;
   align-items: center;
   justify-content: center;
-}
 
-.disabled-button {
-  opacity: 0.7;
-  cursor: not-allowed;
-}
+  &--black {
+    @extend .page__round-button;
+    color: $color-black-primary;
+    bottom: 228px;
+  }
 
-.button-text {
-  font-family: "Roboto medium";
-  font-size: 16px;
-  color: #ffffff;
-}
+  &--brand {
+    @extend .page__round-button;
+    bottom: 100px;
+    color: $color-brand-primary;
+  }
 
-#guess-button {
-  background-color: #ff4343;
-}
-
-#make-guess-button {
-  display: none;
-}
-
-#reset-location-button {
-  color: #3c3c3c;
-  bottom: 228px;
-}
-
-#zoom-in-button {
-  bottom: 164px;
-  color: #ff4343;
-}
-
-#zoom-out-button {
-  bottom: 100px;
-  color: #0000ae;
+  &--red {
+    @extend .page__round-button;
+    bottom: 164px;
+    color: $color-red-primary;
+  }
 }
 
 @media only screen and (max-width: 480px) {
-  #make-guess-button {
-    display: block;
-    background-color: #ff4343;
+  .page__long-button2 {
+    @extend .page__long-button;
+    visibility: visible;
   }
 }
 </style>
